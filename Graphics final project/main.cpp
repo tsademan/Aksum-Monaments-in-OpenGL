@@ -1,16 +1,22 @@
 #include<windows.h>
 #include<GL/glut.h>
 #include<math.h>
+#include<iostream>
+using namespace std;
 float tx = -20;
 float ty = 26;
+float dx = 0;
+float fx = 0;
+float vx = 0;
+float mx = 1, my = 1;
 void init() {
 	glClearColor(0.4, 0.8, 0.9, 1);
 	glMatrixMode(GL_PROJECTION);
-	glOrtho(-40, 40, -40, 43, -40, 40);
+	glOrtho(-40, 40, -44, 43, -40, 40);
 }
 
 void sun(int w) {
-	glutTimerFunc(200, sun, 0);
+	glutTimerFunc(300, sun, 0);
 	glutPostRedisplay();
 	if ((tx <= 15) && (ty <= 42))
 	{
@@ -29,8 +35,73 @@ void sun(int w) {
 	}
 }
 
+void door(unsigned char key, int x, int y) {
+
+	if (((key == 'O') || (key == 'o')) && (fx >= 0))
+	{
+		fx -= 9.5;
+	}
+	if (((key == 'C') || (key == 'c')) && (fx <= -5))
+	{
+		fx += 9.5;
+	}
+	if (((key == 'O') || (key == 'o')) && (dx <= 5))
+	{
+		dx += 10.3;
+	}
+	if (((key == 'C') || (key == 'c')) && (dx >= 10))
+	{
+		dx -= 10.3;
+	}
+	if ((key == 'V') || (key == 'v'));
+	{
+		vx += 80;
+	}
+
+	glutPostRedisplay();
+}
+
+void mouse(int button, int state, int x, int y) {
+	switch (button)
+	{
+	case  GLUT_LEFT_BUTTON:
+		if (mx < 1.2)
+		{
+			mx += 0.1;
+			my += 0.1;
+		}
+		break;
+	case GLUT_RIGHT_BUTTON:
+		if (mx > 0.5)
+		{
+			mx -= 0.1;
+			my -= 0.1;
+		}
+		break;
+	default:
+		break;
+	}
+}
+
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
+	glColor3f(0.019, 0.69, 0.99);
+	glBegin(GL_POLYGON);
+	glVertex2f(40, 43);
+	glColor3f(0, 0.6, 1);
+	glVertex2f(-40, 43);
+	glColor3f(1, 1, 1);
+	glVertex2f(-40, -35);
+	glVertex2f(40, -35);
+	glEnd();
+	glColor3f(0, 0.6, 0);
+	glBegin(GL_POLYGON);
+	glVertex2f(40, -44);
+	glVertex2f(-40, -44);
+	glColor3f(0.3, 0.63, 0.46);
+	glVertex2f(-40, -14);
+	glVertex2f(40, -14);
+	glEnd();
 	//sun
 	glPushMatrix();
 	glTranslatef(tx, ty, 0);
@@ -45,327 +116,330 @@ void display() {
 	}
 	glEnd();
 	glPopMatrix();
-	//axum
-
-	glColor3f(0.3, 0.63, 0.46);
-	glRectf(-40, -16, 40, -43);
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.3, 0.63, 0.46);
-	glVertex2f(-30,-16);
-	glVertex2f(-10,-16);
-	glColor3f(0,0.5,0.6);
-	glVertex2f(-20,-9);
-	glEnd();
-
+	//Cloud 1
+	glColor3f(0.655, 0.895, 0.910);
 	glPushMatrix();
-	glTranslatef(-19,0,0);
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.3, 0.63, 0.46);
-	glVertex2f(-30,-16);
-	glVertex2f(-7,-16);
-	glColor3f(0,0.5,0.6);
-	glVertex2f(-20,-6);
-	glEnd();
+	glTranslatef(-27, 20, 0);
+	glutSolidSphere(4, 30, 30);
+	glTranslatef(-2, 3, 0);
+	glutSolidSphere(4, 30, 30);
+	glTranslatef(-2, -4, 0);
+	glutSolidSphere(4, 30, 30);
+	glTranslatef(4, -2, 0);
+	glutSolidSphere(4, 30, 30);
+	glTranslatef(-3, -3, 0);
+	glutSolidSphere(4, 30, 30);
+	//Cloud 2
+	glColor3f(0.818, 0.900, 0.930);
+	glTranslatef(43, 2, 0);
+	glutSolidSphere(4, 30, 30);
+	glTranslatef(-2, 3, 0);
+	glutSolidSphere(4, 30, 30);
+	glTranslatef(-2, -4, 0);
+	glutSolidSphere(4, 30, 30);
+	glTranslatef(4, -2, 0);
+	glutSolidSphere(4, 30, 30);
+	//Cloud 3
+	glColor3f(0.655, 0.895, 0.910);
+	glTranslatef(20, 13, 0);
+	glutSolidSphere(4, 30, 30);
+	glTranslatef(-2, 3, 0);
+	glutSolidSphere(4, 30, 30);
+	glTranslatef(-2, -4, 0);
+	glutSolidSphere(4, 30, 30);
+	glTranslatef(4, -2, 0);
+	glutSolidSphere(4, 30, 30);
 	glPopMatrix();
 
-	glPushMatrix();
-	glTranslatef(14,-3,0);
+	//Axum
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.3, 0.63, 0.46);
-	glVertex2f(-30,-16);
-	glVertex2f(-7,-16);
-	glColor3f(0,0.5,0.4);
-	glVertex2f(-20,-6);
+	glVertex2f(-30, -16);
+	glVertex2f(-10, -16);
+	glColor3f(0, 0.5, 0.6);
+	glVertex2f(-20, -9);
+	glEnd();
+	glPushMatrix();
+	glTranslatef(-19, 0, 0);
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.3, 0.63, 0.46);
+	glVertex2f(-21.14, -16);
+	glVertex2f(-7, -16);
+	glColor3f(0, 0.5, 0.6);
+	glVertex2f(-21.14, -6);
 	glEnd();
 	glPopMatrix();
-
 	glPushMatrix();
-	glTranslatef(30,0,0);
+	glTranslatef(14, -3, 0);
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.3, 0.63, 0.46);
-	glVertex2f(-30,-16);
-	glVertex2f(-7,-16);
+	glVertex2f(-30, -16);
+	glVertex2f(-7, -16);
+	glColor3f(0, 0.5, 0.4);
+	glVertex2f(-20, -6);
+	glEnd();
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(30, 0, 0);
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.3, 0.63, 0.46);
+	glVertex2f(-32, -19);
+	glVertex2f(-7, -19);
 	glColor3f(0.56, 0.43, 0.43);
-	glVertex2f(-23,-10);
+	glVertex2f(-23, -10);
 	glEnd();
 	glPopMatrix();
-
 	glPushMatrix();
-	glTranslatef(48,-2,0);
+	glTranslatef(46, -2, 0);
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.3, 0.63, 0.46);
-	glVertex2f(-30,-16);
-	glVertex2f(-7,-16);
-	glColor3f(0.3,0.4,0.4);
-	glVertex2f(-20,-6);
+	glVertex2f(-30, -16);
+	glVertex2f(-7, -16);
+	glColor3f(0.3, 0.4, 0.4);
+	glVertex2f(-20, -6);
 	glEnd();
 	glPopMatrix();
-
-	glColor3f(0.60, 0.630, 0.468);
+	//tree 1
+	glPushMatrix();
+	glTranslatef(-0.5, 9, 0);
+	glColor3f(0, 0.6, 0);
+	glBegin(GL_POLYGON);
+	glVertex2f(-38.5, -21);
+	glVertex2f(-35.75, -14);
+	glVertex2f(-33.5, -21);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f(-39, -23.5);
+	glVertex2f(-35.75, -15);
+	glVertex2f(-33, -23.5);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f(-39.5, -26.5);
+	glVertex2f(-35.75, -16);
+	glVertex2f(-32.5, -26.5);
+	glEnd();
+	glColor3f(0, 0.2, 0.468);
+	glBegin(GL_POLYGON);
+	glVertex2f(-36.2, -26.5);
+	glVertex2f(-36.2, -30);
+	glVertex2f(-35.5, -30);
+	glVertex2f(-35.5, -26.5);
+	glEnd();
+	glPopMatrix();
+	// tree 2
+	glPushMatrix();
+	glTranslatef(8, 8, 0);
+	glColor3f(0, 0.6, 0);
+	glBegin(GL_POLYGON);
+	glVertex2f(-38.5, -21);
+	glVertex2f(-35.75, -14);
+	glVertex2f(-33.5, -21);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f(-39, -23.5);
+	glVertex2f(-35.75, -15);
+	glVertex2f(-33, -23.5);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f(-39.5, -26.5);
+	glVertex2f(-35.75, -16);
+	glVertex2f(-32.5, -26.5);
+	glEnd();
+	glColor3f(0, 0.2, 0.468);
+	glBegin(GL_POLYGON);
+	glVertex2f(-36.2, -26.5);
+	glVertex2f(-36.2, -30);
+	glVertex2f(-35.5, -30);
+	glVertex2f(-35.5, -26.5);
+	glEnd();
+	glPopMatrix();
+	//tree 3
+	glPushMatrix();
+	glTranslatef(16, 9, 0);
+	glColor3f(0, 0.6, 0);
+	glBegin(GL_POLYGON);
+	glVertex2f(-38.5, -21);
+	glVertex2f(-35.75, -14);
+	glVertex2f(-33.5, -21);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f(-39, -23.5);
+	glVertex2f(-35.75, -15);
+	glVertex2f(-33, -23.5);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f(-39.5, -26.5);
+	glVertex2f(-35.75, -16);
+	glVertex2f(-32.5, -26.5);
+	glEnd();
+	glColor3f(0, 0.2, 0.468);
+	glBegin(GL_POLYGON);
+	glVertex2f(-36.2, -26.5);
+	glVertex2f(-36.2, -30);
+	glVertex2f(-35.5, -30);
+	glVertex2f(-35.5, -26.5);
+	glEnd();
+	glPopMatrix();
+	//tree 4
+	glPushMatrix();
+	glTranslatef(16.5, 10, 0);
+	glColor3f(0, 0.6, 0);
+	glBegin(GL_POLYGON);
+	glVertex2f(-29.5, -21);
+	glVertex2f(-26.75, -14);
+	glVertex2f(-24.5, -21);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f(-29.5, -23.5);
+	glVertex2f(-26.75, -15);
+	glVertex2f(-24.5, -23.5);
+	glEnd();
+	glColor3f(0, 0.2, 0.468);
+	glBegin(GL_POLYGON);
+	glVertex2f(-27.2, -23.5);
+	glVertex2f(-27.2, -27);
+	glVertex2f(-26.5, -27);
+	glVertex2f(-26.5, -23.5);
+	glEnd();
+	glPopMatrix();
+	//tree 5
+	glPushMatrix();
+	glTranslatef(40, 9, 0);
+	glColor3f(0, 0.6, 0);
+	glBegin(GL_POLYGON);
+	glVertex2f(-38.5, -21);
+	glVertex2f(-35.75, -14);
+	glVertex2f(-33.5, -21);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f(-39, -23.5);
+	glVertex2f(-35.75, -15);
+	glVertex2f(-33, -23.5);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f(-39.5, -26.5);
+	glVertex2f(-35.75, -16);
+	glVertex2f(-32.5, -26.5);
+	glEnd();
+	glColor3f(0, 0.2, 0.468);
+	glBegin(GL_POLYGON);
+	glVertex2f(-36.2, -26.5);
+	glVertex2f(-36.2, -30);
+	glVertex2f(-35.5, -30);
+	glVertex2f(-35.5, -26.5);
+	glEnd();
+	glPopMatrix();
+	//tree 6
+	glPushMatrix();
+	glTranslatef(41.5, 8, 0);
+	glColor3f(0, 0.6, 0);
+	glBegin(GL_POLYGON);
+	glVertex2f(-29.5, -21);
+	glVertex2f(-26.75, -14);
+	glVertex2f(-24.5, -21);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f(-29.5, -23.5);
+	glVertex2f(-26.75, -15);
+	glVertex2f(-24.5, -23.5);
+	glEnd();
+	glColor3f(0, 0.2, 0.468);
+	glBegin(GL_POLYGON);
+	glVertex2f(-27.2, -23.5);
+	glVertex2f(-27.2, -27);
+	glVertex2f(-26.5, -27);
+	glVertex2f(-26.5, -23.5);
+	glEnd();
+	glPopMatrix();
+	//tree 7
+	glPushMatrix();
+	glTranslatef(58.5, 7, 0);
+	glColor3f(0, 0.6, 0);
+	glBegin(GL_POLYGON);
+	glVertex2f(-38.5, -21);
+	glVertex2f(-35.75, -14);
+	glVertex2f(-33.5, -21);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f(-39, -23.5);
+	glVertex2f(-35.75, -15);
+	glVertex2f(-33, -23.5);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f(-39.5, -26.5);
+	glVertex2f(-35.75, -16);
+	glVertex2f(-32.5, -26.5);
+	glEnd();
+	glColor3f(0, 0.2, 0.468);
+	glBegin(GL_POLYGON);
+	glVertex2f(-36.2, -26.5);
+	glVertex2f(-36.2, -30);
+	glVertex2f(-35.5, -30);
+	glVertex2f(-35.5, -26.5);
+	glEnd();
+	glPopMatrix();
+	//tree 8
+	glPushMatrix();
+	glTranslatef(67.5, 10, 0);
+	glColor3f(0, 0.6, 0);
+	glBegin(GL_POLYGON);
+	glVertex2f(-38.5, -21);
+	glVertex2f(-35.75, -14);
+	glVertex2f(-33.5, -21);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f(-39, -23.5);
+	glVertex2f(-35.75, -15);
+	glVertex2f(-33, -23.5);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f(-39.5, -26.5);
+	glVertex2f(-35.75, -16);
+	glVertex2f(-32.5, -26.5);
+	glEnd();
+	glColor3f(0, 0.2, 0.468);
+	glBegin(GL_POLYGON);
+	glVertex2f(-36.2, -26.5);
+	glVertex2f(-36.2, -30);
+	glVertex2f(-35.5, -30);
+	glVertex2f(-35.5, -26.5);
+	glEnd();
+	glPopMatrix();
+	//tree 9
+	glPushMatrix();
+	glTranslatef(64.5, 3.8, 0);
+	glColor3f(0, 0.6, 0);
+	glBegin(GL_POLYGON);
+	glVertex2f(-29.5, -21);
+	glVertex2f(-26.75, -14);
+	glVertex2f(-24.5, -21);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f(-29.5, -23.5);
+	glVertex2f(-26.75, -15);
+	glVertex2f(-24.5, -23.5);
+	glEnd();
+	glColor3f(0, 0.2, 0.468);
+	glBegin(GL_POLYGON);
+	glVertex2f(-27.2, -23.5);
+	glVertex2f(-27.2, -27);
+	glVertex2f(-26.5, -27);
+	glVertex2f(-26.5, -23.5);
+	glEnd();
+	glPopMatrix();
+	//road
+	glColor3f(0.650, 0.566, 0.566);
+	glBegin(GL_POLYGON);
+	glVertex2f(5.8, -22);
+	glVertex2f(-4, -22);
+	glVertex2f(-8.5, -44);
+	glVertex2f(17, -44);
+	glEnd();
+	glPushMatrix();
+	glScalef(mx, my, 1);
+	glColor3f(0.546, 0.648, 0.650);
 	glRectf(-40, -23, 40, -44);
-
-	//tree
-	glPushMatrix();
-	glTranslatef(-0.5, 9,0);
-	glColor3f(0, 0.6, 0);
-	glBegin(GL_POLYGON);
-	glVertex2f(-38.5, -21);
-	glVertex2f(-35.75, -14);
-	glVertex2f(-33.5, -21);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-39, -23.5);
-	glVertex2f(-35.75, -15);
-	glVertex2f(-33, -23.5);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-39.5, -26.5);
-	glVertex2f(-35.75, -16);
-	glVertex2f(-32.5, -26.5);
-	glEnd();
-
-	glColor3f(0, 0.2, 0.468);
-	glBegin(GL_POLYGON);
-	glVertex2f(-36.2, -26.5);
-	glVertex2f(-36.2, -30);
-	glVertex2f(-35.5, -30);
-	glVertex2f(-35.5, -26.5);
-	glEnd();
-	glPopMatrix();
-
-	// tree
-	glPushMatrix();
-	glTranslatef(8, 8,0);
-	glColor3f(0, 0.6, 0);
-	glBegin(GL_POLYGON);
-	glVertex2f(-38.5, -21);
-	glVertex2f(-35.75, -14);
-	glVertex2f(-33.5, -21);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-39, -23.5);
-	glVertex2f(-35.75, -15);
-	glVertex2f(-33, -23.5);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-39.5, -26.5);
-	glVertex2f(-35.75, -16);
-	glVertex2f(-32.5, -26.5);
-	glEnd();
-
-	glColor3f(0, 0.2, 0.468);
-	glBegin(GL_POLYGON);
-	glVertex2f(-36.2, -26.5);
-	glVertex2f(-36.2, -30);
-	glVertex2f(-35.5, -30);
-	glVertex2f(-35.5, -26.5);
-	glEnd();
-	glPopMatrix();
-
-	//tenth tree
-	glPushMatrix();
-	glTranslatef(16, 9,0);
-	glColor3f(0, 0.6, 0);
-	glBegin(GL_POLYGON);
-	glVertex2f(-38.5, -21);
-	glVertex2f(-35.75, -14);
-	glVertex2f(-33.5, -21);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-39, -23.5);
-	glVertex2f(-35.75, -15);
-	glVertex2f(-33, -23.5);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-39.5, -26.5);
-	glVertex2f(-35.75, -16);
-	glVertex2f(-32.5, -26.5);
-	glEnd();
-
-	glColor3f(0, 0.2, 0.468);
-	glBegin(GL_POLYGON);
-	glVertex2f(-36.2, -26.5);
-	glVertex2f(-36.2, -30);
-	glVertex2f(-35.5, -30);
-	glVertex2f(-35.5, -26.5);
-	glEnd();
-	glPopMatrix();
-
-	//tenth tree
-	glPushMatrix();
-	glTranslatef(16.5, 10,0);
-	glColor3f(0, 0.6, 0);
-	glBegin(GL_POLYGON);
-	glVertex2f(-29.5, -21);
-	glVertex2f(-26.75, -14);
-	glVertex2f(-24.5, -21);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-29.5, -23.5);
-	glVertex2f(-26.75, -15);
-	glVertex2f(-24.5, -23.5);
-	glEnd();
-
-	glColor3f(0, 0.2, 0.468);
-	glBegin(GL_POLYGON);
-	glVertex2f(-27.2, -23.5);
-	glVertex2f(-27.2, -27);
-	glVertex2f(-26.5, -27);
-	glVertex2f(-26.5, -23.5);
-	glEnd();
-	glPopMatrix();
-
-	//tenth tree
-	glPushMatrix();
-	glTranslatef(40, 9,0);
-	glColor3f(0, 0.6, 0);
-	glBegin(GL_POLYGON);
-	glVertex2f(-38.5, -21);
-	glVertex2f(-35.75, -14);
-	glVertex2f(-33.5, -21);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-39, -23.5);
-	glVertex2f(-35.75, -15);
-	glVertex2f(-33, -23.5);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-39.5, -26.5);
-	glVertex2f(-35.75, -16);
-	glVertex2f(-32.5, -26.5);
-	glEnd();
-
-	glColor3f(0, 0.2, 0.468);
-	glBegin(GL_POLYGON);
-	glVertex2f(-36.2, -26.5);
-	glVertex2f(-36.2, -30);
-	glVertex2f(-35.5, -30);
-	glVertex2f(-35.5, -26.5);
-	glEnd();
-	glPopMatrix();
-
-	//tenth tree
-	glPushMatrix();
-	glTranslatef(41.5, 8,0);
-	glColor3f(0, 0.6, 0);
-	glBegin(GL_POLYGON);
-	glVertex2f(-29.5, -21);
-	glVertex2f(-26.75, -14);
-	glVertex2f(-24.5, -21);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-29.5, -23.5);
-	glVertex2f(-26.75, -15);
-	glVertex2f(-24.5, -23.5);
-	glEnd();
-
-	glColor3f(0, 0.2, 0.468);
-	glBegin(GL_POLYGON);
-	glVertex2f(-27.2, -23.5);
-	glVertex2f(-27.2, -27);
-	glVertex2f(-26.5, -27);
-	glVertex2f(-26.5, -23.5);
-	glEnd();
-	glPopMatrix();
-
-	//tenth tree
-	glPushMatrix();
-	glTranslatef(58.5, 7,0);
-	glColor3f(0, 0.6, 0);
-	glBegin(GL_POLYGON);
-	glVertex2f(-38.5, -21);
-	glVertex2f(-35.75, -14);
-	glVertex2f(-33.5, -21);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-39, -23.5);
-	glVertex2f(-35.75, -15);
-	glVertex2f(-33, -23.5);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-39.5, -26.5);
-	glVertex2f(-35.75, -16);
-	glVertex2f(-32.5, -26.5);
-	glEnd();
-
-	glColor3f(0, 0.2, 0.468);
-	glBegin(GL_POLYGON);
-	glVertex2f(-36.2, -26.5);
-	glVertex2f(-36.2, -30);
-	glVertex2f(-35.5, -30);
-	glVertex2f(-35.5, -26.5);
-	glEnd();
-	glPopMatrix();
-
-	//tenth tree
-	glPushMatrix();
-	glTranslatef(67.5, 10,0);
-	glColor3f(0, 0.6, 0);
-	glBegin(GL_POLYGON);
-	glVertex2f(-38.5, -21);
-	glVertex2f(-35.75, -14);
-	glVertex2f(-33.5, -21);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-39, -23.5);
-	glVertex2f(-35.75, -15);
-	glVertex2f(-33, -23.5);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-39.5, -26.5);
-	glVertex2f(-35.75, -16);
-	glVertex2f(-32.5, -26.5);
-	glEnd();
-
-	glColor3f(0, 0.2, 0.468);
-	glBegin(GL_POLYGON);
-	glVertex2f(-36.2, -26.5);
-	glVertex2f(-36.2, -30);
-	glVertex2f(-35.5, -30);
-	glVertex2f(-35.5, -26.5);
-	glEnd();
-	glPopMatrix();
-
-		//tenth tree
-	glPushMatrix();
-	glTranslatef(65.5, 3.8,0);
-	glColor3f(0, 0.6, 0);
-	glBegin(GL_POLYGON);
-	glVertex2f(-29.5, -21);
-	glVertex2f(-26.75, -14);
-	glVertex2f(-24.5, -21);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-29.5, -23.5);
-	glVertex2f(-26.75, -15);
-	glVertex2f(-24.5, -23.5);
-	glEnd();
-
-	glColor3f(0, 0.2, 0.468);
-	glBegin(GL_POLYGON);
-	glVertex2f(-27.2, -23.5);
-	glVertex2f(-27.2, -27);
-	glVertex2f(-26.5, -27);
-	glVertex2f(-26.5, -23.5);
-	glEnd();
-	glPopMatrix();
-
-	glColor3f(0.840, 0.722, 0.722);
+	glColor3f(0.850, 0.843, 0.842);
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < 360; i++)
 	{
@@ -375,7 +449,7 @@ void display() {
 		glVertex2f(x, y);
 	}
 	glEnd();
-	glColor3f(0.640, 0.518, 0.543);
+	glColor3f(0.750, 0.750, 0.750);
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < 360; i++)
 	{
@@ -386,7 +460,7 @@ void display() {
 	}
 	glEnd();
 
-	glColor3f(0.840, 0.722, 0.722);
+	glColor3f(0.850, 0.843, 0.842);
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < 360; i++)
 	{
@@ -396,22 +470,19 @@ void display() {
 		glVertex2f(x, y);
 	}
 	glEnd();
-
 	glPushMatrix();
-	glColor3f(0.4, 0.8, 0.9);
+	glColor3f(0.1, 0.7, 1);
 	glTranslatef(-6.6, 36, 0);
 	GLUquadricObj* objj2 = gluNewQuadric();
 	gluPartialDisk(objj2, 0, 0.9, 50, 90, 110, -180);
 	glPopMatrix();
-
 	glPushMatrix();
 	glTranslatef(-2.35, 36.2, 0);
 	GLUquadricObj* objj3 = gluNewQuadric();
 	gluPartialDisk(objj3, 0, 0.9, 50, 90, 70, -180);
 	glPopMatrix();
-
 	glLineWidth(3.5);
-	glColor3f(0.640, 0.518, 0.543);
+	glColor3f(0.750, 0.750, 0.750);
 	glBegin(GL_LINE_STRIP); //on the top
 	glVertex2f(-3.6, 36);//right
 	glVertex2f(-3.55, 37);
@@ -422,9 +493,8 @@ void display() {
 	glVertex2f(-5.45, 36.9);
 	glVertex2f(-6.1, 37.6);
 	glEnd();
-
 	glLineWidth(4);//on top
-	glColor3f(0.840, 0.722, 0.722);
+	glColor3f(0.850, 0.843, 0.842);
 	glBegin(GL_LINES);
 	glVertex2f(-5.8, 36.9);
 	glVertex2f(-6.5, 37.1);
@@ -464,9 +534,9 @@ void display() {
 	glVertex2f(10.8, -34.5);
 	glVertex2f(10.8, -37.5);
 	glEnd();
-
-	glBegin(GL_QUADS);//very small
-	glColor3f(0.840, 0.722, 0.722);//right
+	//very small
+	glBegin(GL_QUADS);
+	glColor3f(0.850, 0.843, 0.842);//right
 	glVertex2f(3, -24);//1st
 	glVertex2f(3, -18);
 	glVertex2f(1, -18);
@@ -476,7 +546,7 @@ void display() {
 	glVertex2f(3, -21);
 	glVertex2f(9, -25);
 	glVertex2f(7, -25);
-	glColor3f(0.840, 0.722, 0.722);
+	glColor3f(0.850, 0.843, 0.842);
 	glVertex2f(6, -23);//2nd
 	glVertex2f(6, -20);
 	glVertex2f(4, -20);
@@ -573,7 +643,7 @@ void display() {
 	glVertex2f(-8, -44);
 	glVertex2f(12, -44);
 	glVertex2f(12, -41);
-	glColor3f(0.840, 0.722, 0.722);//obliscks
+	glColor3f(0.850, 0.843, 0.842);
 	//back small 1
 	glVertex2f(-36.7, -24);
 	glVertex2f(-37, -12);
@@ -617,14 +687,14 @@ void display() {
 	glEnd();
 
 	glBegin(GL_QUADS);
-	glColor3f(0.840, 0.722, 0.722);
+	glColor3f(0.850, 0.843, 0.842);
 	//first big
 	glVertex2f(-29.7, -27.5);
 	glVertex2f(-30, -4);
 	glVertex2f(-33, -4);
 	glVertex2f(-33.3, -27.5);
 	//third bigest
-	glColor3f(0.840, 0.722, 0.722);
+	glColor3f(0.850, 0.843, 0.842);
 	glVertex2f(-8, -22);
 	glVertex2f(-6.5, 36);
 	glVertex2f(-2.5, 36);
@@ -646,7 +716,7 @@ void display() {
 	glRectf(12, -29, 40, -44);
 
 	glBegin(GL_QUADS);//very small
-	glColor3f(0.840, 0.722, 0.722);//left
+	glColor3f(0.850, 0.843, 0.842);//left
 	glVertex2f(-16, -24);//1st
 	glVertex2f(-16, -18);
 	glVertex2f(-17, -18);
@@ -656,7 +726,7 @@ void display() {
 	glVertex2f(-15, -21);
 	glVertex2f(-9, -25);
 	glVertex2f(-11, -25);
-	glColor3f(0.840, 0.722, 0.722);
+	glColor3f(0.850, 0.843, 0.842);
 	glVertex2f(-12, -23);//2nd
 	glVertex2f(-12, -20);
 	glVertex2f(-14, -20);
@@ -670,7 +740,7 @@ void display() {
 	glVertex2f(-11, -28);
 	glVertex2f(-11, -25);
 	//second big
-	glColor3f(0.840, 0.722, 0.722);
+	glColor3f(0.850, 0.843, 0.842);
 	glVertex2f(-14.5, -27.5);
 	glVertex2f(-15, 0);
 	glVertex2f(-18, 0);
@@ -678,7 +748,7 @@ void display() {
 	glEnd();
 
 	glPushMatrix();//top of the shortest oblisck
-	glColor3f(0.840, 0.722, 0.722);
+	glColor3f(0.850, 0.843, 0.842);
 	glTranslatef(2, -17.7, 0);
 	glutSolidCone(1, 2, 20, 20);
 	glTranslatef(3, -2.1, 0);
@@ -695,7 +765,7 @@ void display() {
 
 	glLineWidth(1.5);
 	glBegin(GL_LINES);
-	glColor3f(0.640, 0.518, 0.543);
+	glColor3f(0.750, 0.750, 0.750);
 	glVertex2f(-5.5, 36);//vertical on biggest
 	glVertex2f(-5.5, -22);
 	glVertex2f(-3.5, 36);
@@ -911,7 +981,7 @@ void display() {
 	glVertex2f(-3.8, -11.3);
 	glEnd();
 	//center on the longest oblisk
-	glColor3f(0.740, 0.629, 0.629);
+	glColor3f(0.7, 0.7, 0.7);
 	glRectf(-5, 32.5, -4.2, 34.8);
 	glRectf(-5, 26.5, -4.2, 28.6);
 	glRectf(-5, 20.7, -4.2, 22.6);
@@ -926,7 +996,7 @@ void display() {
 	glColor3f(0.670, 0.543, 0.543);
 	glRectf(-4.7, -17, -4.3, -20);
 	//left side on the longest oblisk
-	glColor3f(0.74, 0.62, 0.62);
+	glColor3f(0.7, 0.7, 0.7);
 	glRectf(-6.5, 32.3, -5.65, 35.4);
 	glRectf(-6.62, 26.3, -5.7, 29.7);
 	glRectf(-6.7, 20.4, -5.7, 23.7);
@@ -937,11 +1007,11 @@ void display() {
 	glRectf(-7.55, -11.25, -5.85, -7.4);
 	glRectf(-7.7, -17.55, -5.85, -14.4);
 	glRectf(-7.75, -21.65, -5.9, -18.4);
-	glColor3f(0.620, 0.477, 0.477);
+	glColor3f(0.79, 0.7, 0.7);
 	glRectf(-7.4, -16.5, -6.1, -15.2);
 	glRectf(-7.4, -20.7, -6.1, -19.4);
 	//right side on the longest oblisk
-	glColor3f(0.74, 0.62, 0.62);
+	glColor3f(0.7, 0.7, 0.7);
 	glRectf(-3.3, 32.3, -2.6, 35.4);
 	glRectf(-3.3, 26.3, -2.45, 29.7);
 	glRectf(-3.25, 20.4, -2.25, 23.7);
@@ -952,13 +1022,13 @@ void display() {
 	glRectf(-3.18, -11.25, -1.55, -7.4);
 	glRectf(-3.15, -17.55, -1.4, -14.4);
 	glRectf(-3.15, -21.65, -1.4, -18.3);
-	glColor3f(0.620, 0.477, 0.477);
+	glColor3f(0.79, 0.7, 0.7);
 	glRectf(-2.95, -16.5, -1.65, -15.2);
 	glRectf(-2.95, -20.7, -1.65, -19.4);
 	//lines on the left side of the biggest
 	glLineWidth(2);
 	glBegin(GL_LINES);
-	glColor3f(0.840, 0.722, 0.722);
+	glColor3f(0.850, 0.843, 0.842);
 	glVertex2f(-5.6, 35);
 	glVertex2f(-6.55, 35);
 	glVertex2f(-5.6, 29.2);
@@ -975,11 +1045,11 @@ void display() {
 	glVertex2f(-7.5, -1.3);
 	glVertex2f(-5.7, -8);
 	glVertex2f(-7.6, -8);
-	glColor3f(0.600, 0.504, 0.504);
+	glColor3f(0.79, 0.7, 0.7);
 	glVertex2f(-5.35, -15.2);
 	glVertex2f(-3.6, -15.2);
 	//lines on the right side of the biggest
-	glColor3f(0.840, 0.722, 0.722);
+	glColor3f(0.850, 0.843, 0.842);
 	glVertex2f(-3.3, 35);
 	glVertex2f(-2.5, 35);
 	glVertex2f(-3.3, 29.2);
@@ -1236,19 +1306,19 @@ void display() {
 	glEnd();
 
 	glPushMatrix();
-	glColor3f(0.840, 0.722, 0.722);
+	glColor3f(0.850, 0.843, 0.842);
 	glTranslatef(17.5, 3.5, 0);
 	glutSolidCone(1.5, 2, 20, 20);//
-	glColor3f(0.840, 0.722, 0.722);
+	glColor3f(0.850, 0.843, 0.842);
 	glTranslatef(17, -5.2, 0);
 	glutSolidCone(1.5, 2, 20, 20);
 	glPopMatrix();
 
 	glPushMatrix();
-	glColor3f(0.4, 0.8, 0.9);
+	glColor3f(0.501, 0.792, 0.850);
 	glTranslatef(11.5, 3.5, 0);
 	glutSolidCone(1.5, 2, 20, 20);
-	glColor3f(0.640, 0.518, 0.543);
+	glColor3f(0.750, 0.750, 0.750);
 	glTranslatef(-17.83, 28.4, 0);//1
 	glutSolidCone(0.22, 2, 20, 20);
 	glTranslatef(0.5, 0, 0);
@@ -1348,14 +1418,13 @@ void display() {
 	glPopMatrix();
 
 	glPushMatrix();
-	glColor3f(0.840, 0.722, 0.722);
+	glColor3f(0.850, 0.843, 0.842);
 	glTranslatef(-16.5, 0, 0);
 	GLUquadricObj* objj = gluNewQuadric();
 	gluPartialDisk(objj, 0, 1.5, 50, 90, 90, -180);
 	glPopMatrix();
 
 	glPushMatrix();
-	glColor3f(0.840, 0.722, 0.722);
 	glTranslatef(-31.5, -4, 0);
 	GLUquadricObj* objj1 = gluNewQuadric();
 	gluPartialDisk(objj1, 0, 1.55, 50, 90, 90, -180);
@@ -1370,23 +1439,33 @@ void display() {
 		glVertex2f(x, y);
 	}
 	glEnd();
+
+	glLineWidth(4);
+	glColor3f(0.290, 0.249, 0.249);
+	glBegin(GL_LINES);
+	glVertex2f(-8.1, -22);
+	glVertex2f(-6.6, 36);
+	glEnd();
+
+	glPushMatrix();
+	glTranslatef(fx, 0, 0);
 	//thin lines 1
 	glLineWidth(0.2);
 	glColor3f(0.1, 0.1, 0.1);
 	glBegin(GL_LINES);
 	//vertical
 	glVertex2f(-6.4, -29);
-	glVertex2f(-6.4, -40);
+	glVertex2f(-6.4, -44);
 	glVertex2f(-5.3, -29);
-	glVertex2f(-5.3, -40);
+	glVertex2f(-5.3, -44);
 	glVertex2f(-4.1, -29);
-	glVertex2f(-4.1, -40);
+	glVertex2f(-4.1, -44);
 	glVertex2f(-2, -29);
-	glVertex2f(-2, -40);
+	glVertex2f(-2, -44);
 	glVertex2f(-0.8, -29);
-	glVertex2f(-0.8, -40);
+	glVertex2f(-0.8, -44);
 	glVertex2f(0.3, -29);
-	glVertex2f(0.3, -40);
+	glVertex2f(0.3, -44);
 	//horizontal
 	glVertex2f(-7.5, -31.2);
 	glVertex2f(1.4, -31.2);
@@ -1398,65 +1477,25 @@ void display() {
 	glVertex2f(1.4, -37.2);
 	glVertex2f(-7.5, -39.2);
 	glVertex2f(1.4, -39.2);
+	glVertex2f(-7.5, -41.2);
+	glVertex2f(1.4, -41.2);
+	glVertex2f(-7.5, -43.2);
+	glVertex2f(1.4, -43.2);
 	glEnd();
-	glPushMatrix();
-	glTranslatef(9.2, 0, 0);
-	//thin lines 2
-	glLineWidth(0.2);
-	glBegin(GL_LINES);
-	//vertical
-	glVertex2f(-6.4, -29);
-	glVertex2f(-6.4, -40);
-	glVertex2f(-5.3, -29);
-	glVertex2f(-5.3, -40);
-	glVertex2f(-4.1, -29);
-	glVertex2f(-4.1, -40);
-	glVertex2f(-2, -29);
-	glVertex2f(-2, -40);
-	glVertex2f(-0.8, -29);
-	glVertex2f(-0.8, -40);
-	glVertex2f(0.3, -29);
-	glVertex2f(0.3, -40);
-	glVertex2f(1.3, -29);
-	glVertex2f(1.3, -40);
-	//horizontal
-	glVertex2f(-7.5, -31.2);
-	glVertex2f(2.4, -31.2);
-	glVertex2f(-7.5, -33.2);
-	glVertex2f(2.4, -33.2);
-	glVertex2f(-7.5, -35.2);
-	glVertex2f(2.4, -35.2);
-	glVertex2f(-7.5, -37.2);
-	glVertex2f(2.4, -37.2);
-	glVertex2f(-7.5, -39.2);
-	glVertex2f(2.4, -39.2);
-	glEnd();
-	glPopMatrix();
-	//vertical
+
 	glLineWidth(4);
 	glColor3f(0.2, 0.3, 0.3);
 	glBegin(GL_LINES);
 	glVertex2f(-7.8, -29);
-	glVertex2f(-7.8, -40);
+	glVertex2f(-7.8, -44);
 	glVertex2f(-7.5, -29);
-	glVertex2f(-7.5, -40);
+	glVertex2f(-7.5, -44);
 	glVertex2f(-3, -29);
-	glVertex2f(-3, -40);
-	glVertex2f(1.7, -29);
-	glVertex2f(1.7, -40);
+	glVertex2f(-3, -44);
 	glVertex2f(1.4, -29);
-	glVertex2f(1.4, -40);
-	glVertex2f(6.1, -29);
-	glVertex2f(6.1, -40);
-	glVertex2f(11.5, -29);
-	glVertex2f(11.5, -40);
-	glVertex2f(11.8, -29);
-	glVertex2f(11.8, -40);
-
+	glVertex2f(1.4, -44);
 	glVertex2f(-7.5, -29.2);
 	glVertex2f(1.4, -29.2);
-	glVertex2f(1.7, -29.2);
-	glVertex2f(11.5, -29.2);
 	glEnd();
 
 	glLineWidth(10);
@@ -1468,12 +1507,633 @@ void display() {
 	glVertex2f(-7.25, -38);
 	glVertex2f(1.15, -32);
 	glVertex2f(1.93, -32);
+	glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(dx, 0, 0);
+	glPushMatrix();
+	glTranslatef(9.2, 0, 0);
+	//thin lines 2
+	glLineWidth(0.2);
+	glBegin(GL_LINES);
+	//vertical
+	glVertex2f(-6.4, -29);
+	glVertex2f(-6.4, -44);
+	glVertex2f(-5.3, -29);
+	glVertex2f(-5.3, -44);
+	glVertex2f(-4.1, -29);
+	glVertex2f(-4.1, -44);
+	glVertex2f(-2, -29);
+	glVertex2f(-2, -44);
+	glVertex2f(-0.8, -29);
+	glVertex2f(-0.8, -44);
+	glVertex2f(0.3, -29);
+	glVertex2f(0.3, -44);
+	glVertex2f(1.3, -29);
+	glVertex2f(1.3, -44);
+	//horizontal
+	glVertex2f(-7.5, -31.2);
+	glVertex2f(2.4, -31.2);
+	glVertex2f(-7.5, -33.2);
+	glVertex2f(2.4, -33.2);
+	glVertex2f(-7.5, -35.2);
+	glVertex2f(2.4, -35.2);
+	glVertex2f(-7.5, -37.2);
+	glVertex2f(2.4, -37.2);
+	glVertex2f(-7.5, -39.2);
+	glVertex2f(2.4, -39.2);
+	glVertex2f(-7.5, -41.2);
+	glVertex2f(2.4, -41.2);
+	glVertex2f(-7.5, -43.2);
+	glVertex2f(2.4, -43.2);
+	glEnd();
+	glPopMatrix();
+	//vertical
+	glLineWidth(4);
+	glColor3f(0.2, 0.3, 0.3);
+	glBegin(GL_LINES);
+	glVertex2f(1.7, -29);
+	glVertex2f(1.7, -44);
+	glVertex2f(6.1, -29);
+	glVertex2f(6.1, -44);
+	glVertex2f(11.5, -29);
+	glVertex2f(11.5, -44);
+	glVertex2f(11.8, -29);
+	glVertex2f(11.8, -44);
+	glVertex2f(1.7, -29.2);
+	glVertex2f(11.5, -29.2);
+	glEnd();
+
+	glLineWidth(10);
+	glColor3f(0.2, 0.25, 0.3);
+	glBegin(GL_LINES);
 	glVertex2f(11.25, -31);
 	glVertex2f(12, -31);
 	glVertex2f(11.25, -38);
 	glVertex2f(12, -38);
 	glEnd();
+	glPopMatrix();
+	glPopMatrix();
 
+	glPushMatrix();
+	glTranslatef(vx, 4, 0);
+	glColor3f(0.920, 0.541, 0.0460);
+	//computer
+	glRectf(-40, 43, 40, -49);
+	glPushMatrix();
+	glScalef(1,1.1,1);
+    glBegin(GL_POLYGON);
+    glColor3f(0, 0, 0);
+    glVertex2f(-25.5,32);
+    glVertex2f(-25.5,-19);
+    glColor3f(0.520, 0.520, 0.520);
+    glVertex2f(-24,-16);
+    glVertex2f(-24,29);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(0, 0, 0);
+    glVertex2f(-25.5,32);
+    glVertex2f(25.5,32);
+    glVertex2f(24,29);
+    glColor3f(0.520, 0.520, 0.520);
+    glVertex2f(-24,29);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(0, 0, 0);
+    glVertex2f(25.5,32);
+    glVertex2f(24,29);
+    glVertex2f(24,-16);
+    glVertex2f(25.5,-19);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(0.520, 0.520, 0.520);
+    glVertex2f(-24,-16);
+    glColor3f(0, 0, 0);
+    glVertex2f(24,-16);
+    glVertex2f(25.5,-19);
+    glVertex2f(-25.5,-19);
+    glEnd();
+	glColor3f(0.7, 0.9, 0.9);
+	glRectf(-24, 29, 24, -16);
+	glBegin(GL_POLYGON);
+    glColor3f(0, 0, 0);
+    glVertex2f(-5,-25);
+    glVertex2f(8,-25);
+    glVertex2f(4,-34);
+    glVertex2f(-9,-34);
+    glEnd();
+    glColor3f(0, 0.02, 0);
+    glRectf(-3, -19, 4, -28);
+    glColor3f(0.0, 0.1, 0.0);
+    glBegin(GL_POLYGON);
+	for (int i = 0; i < 360; i++)
+	{
+		float angle = i * 3.14 / 180;
+		float x = 1.4 * cos(angle) + 0.3;
+		float y = 2.4 * sin(angle) - 21.5;
+		glVertex2f(x, y);
+	}
+	glEnd();
+	glColor3f(0.920, 0.541, 0.0460);
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < 360; i++)
+	{
+		float angle = i * 3.14 / 180;
+		float x = 1 * cos(angle) + 0.74;
+		float y = 2.1 * sin(angle) - 21.5;
+		glVertex2f(x, y);
+	}
+	glEnd();
+
+	glLineWidth(2);
+	glColor3f(0, 0, 0);
+    glPushMatrix();
+    glTranslatef(0,11,0);
+    glColor3f(0, 0, 0);
+	glRectf(-5, -23, 23.5, -26);
+	glColor3f(1, 0, 0);
+	glRasterPos2i(-8, 12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'A');
+	glRasterPos2i(-7, 12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'X');
+	glRasterPos2i(-6, 12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'U');
+	glRasterPos2i(-5, 12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'M');
+	glRasterPos2i(-3, 12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'O');
+	glRasterPos2i(-2, 12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'B');
+	glRasterPos2i(-1, 12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'E');
+	glRasterPos2i(0, 12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'L');
+	glRasterPos2i(1, 12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'I');
+	glRasterPos2i(2, 12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'S');
+	glRasterPos2i(3, 12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'K');
+
+	glLineWidth(2);
+	glBegin(GL_LINES);
+	glVertex2f(-8, 11);
+	glVertex2f(4, 11);
+	glVertex2f(-8, 10.5);
+	glVertex2f(4, 10.5);
+	glEnd();
+
+	glColor3f(0, 0.6, 0);
+	glRasterPos2i(-23, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'D');
+	glRasterPos2i(-22, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'e');
+	glRasterPos2i(-21, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 's');
+	glRasterPos2i(-20, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'i');
+	glRasterPos2i(-19, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'g');
+	glRasterPos2i(-18, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'n');
+	glRasterPos2i(-17, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'e');
+	glRasterPos2i(-16, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'd');
+	glRasterPos2i(-14, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'b');
+	glRasterPos2i(-13, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'y');
+	glRasterPos2i(-12, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ':');
+	glRasterPos2i(-11.5, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '-');
+	glRasterPos2i(-9, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '1');
+	glRasterPos2i(-8, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ')');
+	glRasterPos2i(-6, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'S');
+	glRasterPos2i(-5, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'i');
+	glRasterPos2i(-4, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'r');
+	glRasterPos2i(-3, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'a');
+	glRasterPos2i(-2, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'j');
+	glRasterPos2i(0, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'A');
+	glRasterPos2i(1, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'n');
+	glRasterPos2i(2, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'i');
+	glRasterPos2i(3, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 's');
+	glRasterPos2i(4, 6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'e');
+	glRasterPos2i(-9, 3);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '2');
+	glRasterPos2i(-8, 3);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ')');
+	glRasterPos2i(-6, 3);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'T');
+	glRasterPos2i(-5, 3);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 's');
+	glRasterPos2i(-4, 3);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'a');
+	glRasterPos2i(-3, 3);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'd');
+	glRasterPos2i(-2, 3);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'i');
+	glRasterPos2i(-1, 3);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'k');
+	glRasterPos2i(0, 3);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'u');
+	glRasterPos2i(2, 3);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'w');
+	glRasterPos2i(3, 3);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'o');
+	glRasterPos2i(4, 3);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'n');
+	glRasterPos2i(5, 3);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'd');
+	glRasterPos2i(6, 3);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'i');
+	glRasterPos2i(7, 3);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'm');
+	glRasterPos2i(8, 3);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'u');
+	glRasterPos2i(-9, 0);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '3');
+	glRasterPos2i(-8, 0);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ')');
+	glRasterPos2i(-6, 0);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'm');
+	glRasterPos2i(-5, 0);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'u');
+	glRasterPos2i(-4, 0);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'b');
+	glRasterPos2i(-3, 0);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'a');
+	glRasterPos2i(-2, 0);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'r');
+	glRasterPos2i(-1, 0);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'e');
+	glRasterPos2i(0, 0);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'k');
+	glRasterPos2i(2, 0);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'J');
+	glRasterPos2i(3, 0);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'e');
+	glRasterPos2i(4, 0);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'm');
+	glRasterPos2i(5, 0);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'a');
+	glRasterPos2i(6, 0);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'l');
+	glColor3f(0, 0, 1);
+	glRasterPos2i(-23, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'I');
+	glRasterPos2i(-22, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'n');
+	glRasterPos2i(-21, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 's');
+	glRasterPos2i(-20, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 't');
+	glRasterPos2i(-19, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'r');
+	glRasterPos2i(-18, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'u');
+	glRasterPos2i(-17, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'c');
+	glRasterPos2i(-16, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 't');
+	glRasterPos2i(-15, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'i');
+	glRasterPos2i(-14, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'o');
+	glRasterPos2i(-13, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'n');
+	glRasterPos2i(-12, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ':');
+	glRasterPos2i(-10, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'P');
+	glRasterPos2i(-9, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'r');
+	glRasterPos2i(-8, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'e');
+	glRasterPos2i(-7, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 's');
+	glRasterPos2i(-6, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 's');
+	glRasterPos2i(-5, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '"');
+	glRasterPos2i(-4, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'V');
+	glRasterPos2i(-3, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '"');
+	glRasterPos2i(-2, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'o');
+	glRasterPos2i(-1, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'r');
+	glRasterPos2i(0, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '"');
+	glRasterPos2i(1, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'v');
+	glRasterPos2i(2, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '"');
+	glRasterPos2i(3, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 't');
+	glRasterPos2i(4, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'o');
+	glRasterPos2i(6, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'v');
+	glRasterPos2i(7, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'i');
+	glRasterPos2i(8, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'e');
+	glRasterPos2i(9, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'w');
+	glRasterPos2i(11, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'A');
+	glRasterPos2i(12, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'x');
+	glRasterPos2i(13, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'u');
+	glRasterPos2i(14, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'm');
+	glRasterPos2i(16, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'O');
+	glRasterPos2i(17, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'b');
+	glRasterPos2i(18, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'e');
+	glRasterPos2i(19, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'l');
+	glRasterPos2i(20, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'i');
+	glRasterPos2i(21, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 's');
+	glRasterPos2i(22, -6);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'k');
+	glRasterPos2i(-10, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'P');
+	glRasterPos2i(-9, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'r');
+	glRasterPos2i(-8, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'e');
+	glRasterPos2i(-7, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 's');
+	glRasterPos2i(-6, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 's');
+	glRasterPos2i(-5, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '"');
+	glRasterPos2i(-4, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'O');
+	glRasterPos2i(-3, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '"');
+	glRasterPos2i(-2, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'o');
+	glRasterPos2i(-1, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'r');
+	glRasterPos2i(0, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '"');
+	glRasterPos2i(1, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'o');
+	glRasterPos2i(2, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '"');
+	glRasterPos2i(3, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 't');
+	glRasterPos2i(4, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'o');
+	glRasterPos2i(6, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'o');
+	glRasterPos2i(7, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'p');
+	glRasterPos2i(8, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'e');
+	glRasterPos2i(9, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'n');
+	glRasterPos2i(11, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 't');
+	glRasterPos2i(12, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'h');
+	glRasterPos2i(13, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'e');
+	glRasterPos2i(15, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'd');
+	glRasterPos2i(16, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'o');
+	glRasterPos2i(17, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'o');
+	glRasterPos2i(18, -9);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'r');
+	glRasterPos2i(-10, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'P');
+	glRasterPos2i(-9, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'r');
+	glRasterPos2i(-8, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'e');
+	glRasterPos2i(-7, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 's');
+	glRasterPos2i(-6, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 's');
+	glRasterPos2i(-5, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '"');
+	glRasterPos2i(-4, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'C');
+	glRasterPos2i(-3, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '"');
+	glRasterPos2i(-2, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'o');
+	glRasterPos2i(-1, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'r');
+	glRasterPos2i(0, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '"');
+	glRasterPos2i(1, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'c');
+	glRasterPos2i(2, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '"');
+	glRasterPos2i(3, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 't');
+	glRasterPos2i(4, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'o');
+	glRasterPos2i(6, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'c');
+	glRasterPos2i(7, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'l');
+	glRasterPos2i(8, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'o');
+	glRasterPos2i(9, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 's');
+	glRasterPos2i(10, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'e');
+	glRasterPos2i(12, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 't');
+	glRasterPos2i(13, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'h');
+	glRasterPos2i(14, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'e');
+	glRasterPos2i(16, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'd');
+	glRasterPos2i(17, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'o');
+	glRasterPos2i(18, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'o');
+	glRasterPos2i(19, -12);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'r');
+	glColor3f(0, 0, 0);
+	glRasterPos2i(-23, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'T');
+	glRasterPos2i(-22, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'o');
+	glRasterPos2i(-20, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'm');
+	glRasterPos2i(-19, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'i');
+	glRasterPos2i(-18, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'n');
+	glRasterPos2i(-17, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'i');
+	glRasterPos2i(-16, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'm');
+	glRasterPos2i(-15, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'i');
+	glRasterPos2i(-14, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'z');
+	glRasterPos2i(-13, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'e');
+	glRasterPos2i(-11, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'a');
+	glRasterPos2i(-10, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'n');
+	glRasterPos2i(-9, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'd');
+	glRasterPos2i(-7, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'm');
+	glRasterPos2i(-6, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'a');
+	glRasterPos2i(-5, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'x');
+	glRasterPos2i(-4, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'i');;
+	glRasterPos2i(-3, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'm');
+	glRasterPos2i(-2, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'i');
+	glRasterPos2i(-1, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'z');
+	glRasterPos2i(0, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'e');
+	glRasterPos2i(2, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'u');
+	glRasterPos2i(3, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 's');;
+	glRasterPos2i(4, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'e');
+	glRasterPos2i(6, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'r');
+	glRasterPos2i(7, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'i');
+	glRasterPos2i(8, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'g');
+	glRasterPos2i(9, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'h');
+	glRasterPos2i(10, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 't');
+	glRasterPos2i(12, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'a');
+	glRasterPos2i(13, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'n');
+	glRasterPos2i(14, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'd');
+	glRasterPos2i(16, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'l');
+	glRasterPos2i(17, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'e');
+	glRasterPos2i(18, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'f');;
+	glRasterPos2i(19, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 't');
+	glRasterPos2i(21, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'k');
+	glRasterPos2i(22, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'e');
+	glRasterPos2i(23, -15);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'y');
+
+	glColor3f(1, 1, 1);
+	glRasterPos2i(-4, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'C');
+	glRasterPos2i(-3, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'S');
+	glRasterPos2i(-2, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '/');
+	glRasterPos2i(-1, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'C');
+	glRasterPos2i(0, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'C');
+	glRasterPos2i(1, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'I');
+	glRasterPos2i(2, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '/');
+	glRasterPos2i(3, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'W');
+	glRasterPos2i(4, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'K');
+	glRasterPos2i(5, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'U');
+	glRasterPos2i(6, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '/');
+	glRasterPos2i(7, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'E');
+	glRasterPos2i(8, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'T');
+	glRasterPos2i(9, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'H');
+	glRasterPos2i(10, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'I');
+	glRasterPos2i(11, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'O');
+	glRasterPos2i(12, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'P');
+	glRasterPos2i(13, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'I');
+	glRasterPos2i(14, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'A');
+	glRasterPos2i(15, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '/');
+	glRasterPos2i(16, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '2');
+	glRasterPos2i(17, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '0');
+	glRasterPos2i(18, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '1');
+	glRasterPos2i(19, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '5');
+	glRasterPos2i(20, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'E');
+	glRasterPos2i(21, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '.');
+	glRasterPos2i(22, -25);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'C');
+	glRasterPos2i(-1, -29);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'D');
+	glRasterPos2i(0, -29);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'E');
+	glRasterPos2i(1, -29);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'L');
+	glRasterPos2i(2, -29);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'L');
+
+	glPopMatrix();
+	glPopMatrix();
+	glPopMatrix();
 	glFlush();
 }
 
@@ -1485,7 +2145,9 @@ int main(int argc, char** argv) {
 	glutCreateWindow("Axum Oblisk");
 	init();
 	glutDisplayFunc(display);
+	glutKeyboardFunc(door);
 	glutTimerFunc(0, sun, 0);
+	glutMouseFunc(mouse);
 	glutMainLoop();
 	return 0;
 }
